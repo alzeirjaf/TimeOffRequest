@@ -1,0 +1,372 @@
+Screens:
+  scrnCalendar:
+    Properties:
+      Fill: =RGBA(0, 0, 0, 0)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+      OnVisible: |-
+        =Set(varCurrentMonth, DateAdd(Today(), -Day(Today()) + 1, TimeUnit.Days));
+        ClearCollect(
+            colCalendarDays,
+            ForAll(
+                Sequence(42),
+                {
+                    DayDate: DateAdd(
+                        varCurrentMonth,
+                        ThisRecord.Value - Weekday(varCurrentMonth),
+                        TimeUnit.Days
+                    )
+                }
+            )
+        )
+    Children:
+      - labelMonth:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderStyle: =BorderStyle.None
+            BorderThickness: =2
+            Color: =RGBA(50, 49, 48, 1)
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledColor: =RGBA(161, 159, 157, 1)
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            Height: =48
+            Size: =18
+            Text: =Text(varCurrentMonth, "[$-en-US]mmmm yyyy")
+            X: =13
+            Y: =4
+      - iconPreviousMonth:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            Color: =RGBA(0, 120, 212, 1)
+            DisabledBorderColor: =RGBA(245, 245, 245, 1)
+            DisabledColor: =RGBA(225, 223, 221, 1)
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =4
+            Height: =39
+            HoverBorderColor: =RGBA(0, 0, 0, 0)
+            HoverColor: =RGBA(16, 110, 190, 1)
+            HoverFill: =RGBA(0, 0, 0, 0)
+            Icon: =Icon.BackArrow
+            OnSelect: |-
+              =Set(varCurrentMonth, DateAdd(varCurrentMonth, -1, TimeUnit.Months));
+              ClearCollect(
+                  colCalendarDays,
+                  ForAll(
+                      Sequence(42),
+                      {
+                          DayDate: DateAdd(
+                              varCurrentMonth,
+                              ThisRecord.Value - Weekday(varCurrentMonth),
+                              TimeUnit.Days
+                          )
+                      }
+                  )
+              )
+            PressedBorderColor: =RGBA(0, 0, 0, 0)
+            PressedColor: =RGBA(16, 110, 190, 1)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            Width: =53
+            X: =187
+            Y: =8
+      - iconNextMonth:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            Color: =RGBA(0, 120, 212, 1)
+            DisabledBorderColor: =RGBA(245, 245, 245, 1)
+            DisabledColor: =RGBA(225, 223, 221, 1)
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =4
+            Height: =39
+            HoverBorderColor: =RGBA(0, 0, 0, 0)
+            HoverColor: =RGBA(16, 110, 190, 1)
+            HoverFill: =RGBA(0, 0, 0, 0)
+            Icon: =Icon.NextArrow
+            OnSelect: |-
+              =Set(varCurrentMonth, DateAdd(varCurrentMonth, 1, TimeUnit.Months));
+              ClearCollect(
+                  colCalendarDays,
+                  ForAll(
+                      Sequence(42),
+                      {
+                          DayDate: DateAdd(
+                              varCurrentMonth,
+                              ThisRecord.Value - Weekday(varCurrentMonth),
+                              TimeUnit.Days
+                          )
+                      }
+                  )
+              )
+            PressedBorderColor: =RGBA(0, 0, 0, 0)
+            PressedColor: =RGBA(16, 110, 190, 1)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            Width: =42
+            X: =240
+            Y: =8
+      - toggleShowAllApproved:
+          Control: Toggle@1.1.5
+          Properties:
+            Height: =48
+            Label: ="Show All Approved"
+            OnCheck: =Set(varShowAll, true)
+            OnUncheck: =Set(varShowAll, false)
+            Width: =210
+            X: =303
+            Y: =4
+      - galCalendarDays:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+          Properties:
+            BorderColor: =RGBA(245, 245, 245, 1)
+            Height: =671
+            Items: =colCalendarDays
+            Width: =1366
+            WrapCount: =7
+            Y: =97
+          Children:
+            - Rectangle1:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderThickness: =1
+                  DisabledFill: =RGBA(161, 159, 157, 1)
+                  Fill: =RGBA(0, 0, 0, 0)
+                  FocusedBorderThickness: =4
+                  HoverFill: =RGBA(0, 120, 212, 1)
+                  OnSelect: =Select(Parent)
+                  PressedFill: =RGBA(0, 120, 212, 1)
+                  Width: =172
+                  X: =17
+                  Y: =4
+            - Label4:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =2
+                  Color: =RGBA(50, 49, 48, 1)
+                  DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                  DisabledColor: =RGBA(161, 159, 157, 1)
+                  FocusedBorderThickness: =4
+                  Font: =Font.'Segoe UI'
+                  Height: =33
+                  OnSelect: =Select(Parent)
+                  Text: |-
+                    =If(
+                        Month(ThisItem.DayDate) = Month(varCurrentMonth),
+                        Text(ThisItem.DayDate, "d"),
+                        ""
+                    )
+                  Width: =42
+                  X: =17
+                  Y: =4
+            - galTimeOffPerDay:
+                Control: Gallery@2.15.0
+                Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                Properties:
+                  BorderColor: =RGBA(245, 245, 245, 1)
+                  Height: =104
+                  Items: |-
+                    =Filter(
+                        TimeOffRequests,
+                        Status.Value = "Approved",
+                        ThisItem.DayDate >= 'Start Date',
+                        ThisItem.DayDate <= 'End Date',
+                        varShowAll || Title = User().FullName
+                    )
+                  TemplateSize: =80
+                  Width: =192
+                Children:
+                  - labelApprovedRequest:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =2
+                        Color: =RGBA(50, 49, 48, 1)
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledColor: =RGBA(161, 159, 157, 1)
+                        FocusedBorderThickness: =4
+                        Font: =Font.'Segoe UI'
+                        Height: =87
+                        OnSelect: =Select(Parent)
+                        Text: |-
+                          =If(varShowAll, ThisItem.Title & ": " & ThisItem.'Leave Type'.Value,ThisItem.'Leave Type'.Value)
+                        Width: =169
+                        X: =20
+                        Y: =8
+      - Sunday:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =31
+            Width: =169
+            X: =32
+            Y: =60
+          Children:
+            - TextCanvas1:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ="Center"
+                  Height: =Parent.Height
+                  Text: ="Sunday"
+                  Width: =Parent.Width
+      - Monday:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =31
+            Width: =169
+            X: =224
+            Y: =60
+          Children:
+            - TextCanvas1_1:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ="Center"
+                  Height: =Parent.Height
+                  Text: ="Monday"
+                  Width: =Parent.Width
+      - Tuesday:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =31
+            Width: =169
+            X: =417
+            Y: =60
+          Children:
+            - TextCanvas1_2:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ="Center"
+                  Height: =Parent.Height
+                  Text: ="Tuesday"
+                  Width: =Parent.Width
+      - Wednesday:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =31
+            Width: =169
+            X: =608
+            Y: =60
+          Children:
+            - TextCanvas1_3:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ="Center"
+                  Height: =Parent.Height
+                  Text: ="Wednesday"
+                  Width: =Parent.Width
+      - Thursday:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =31
+            Width: =169
+            X: =800
+            Y: =60
+          Children:
+            - TextCanvas1_4:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ="Center"
+                  Height: =31
+                  Text: ="Thursday"
+                  Width: =169
+      - Friday:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =31
+            Width: =169
+            X: =992
+            Y: =60
+          Children:
+            - TextCanvas1_5:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ="Center"
+                  Height: =Parent.Height
+                  Text: ="Friday"
+                  Width: =Parent.Width
+      - Saturday:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =31
+            Width: =169
+            X: =1185
+            Y: =60
+          Children:
+            - TextCanvas1_6:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ="Center"
+                  Height: =31
+                  Text: ="Saturday"
+                  Width: =169
+      - Image3:
+          Control: Image@2.2.3
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderStyle: =BorderStyle.None
+            BorderThickness: =2
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =4
+            Height: =48
+            HoverBorderColor: =RGBA(0, 0, 0, 0)
+            HoverFill: =RGBA(0, 0, 0, 0)
+            Image: =images
+            PressedBorderColor: =RGBA(0, 0, 0, 0)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            X: =1266
+      - Container4_2:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =40
+            Width: =Parent.Width
+            Y: =Parent.Height - 40
+          Children:
+            - Calendar_2:
+                Control: Button@0.0.45
+                Properties:
+                  Height: =Parent.Height
+                  OnSelect: =Navigate(scrnCalendar, ScreenTransition.None)
+                  Text: ="Calendar"
+                  Width: =Parent.Width/3
+            - MyRequests_2:
+                Control: Button@0.0.45
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderRadius: =2
+                  BorderStyle: =BorderStyle.Solid
+                  Height: =Parent.Height
+                  IconStyle: ='ButtonCanvas.IconStyle'.Outline
+                  OnSelect: =Navigate(scrnMyRequests, ScreenTransition.None)
+                  Text: ="My Requests"
+                  Width: =Parent.Width/3
+                  X: =Parent.Width - Parent.Width/3
+            - Request_2:
+                Control: Button@0.0.45
+                Properties:
+                  Height: =Parent.Height
+                  OnSelect: =Navigate(Screen1, ScreenTransition.None)
+                  Text: ="Request"
+                  Width: =Parent.Width/3
+                  X: =Parent.Width/3
+      - NavigateToManagerScreen_2:
+          Control: Button@0.0.45
+          Properties:
+            Height: =39
+            OnSelect: =Navigate(scrnManagerView, ScreenTransition.None)
+            Text: ="Manager Dashboard"
+            Visible: =User().Email = "IGREWAL1@calgary.ca"
+            Width: =201
+            X: =1048
+            Y: =8
