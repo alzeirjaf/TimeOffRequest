@@ -1,0 +1,270 @@
+Screens:
+  scrnMyRequests:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+    Children:
+      - ScreenContainer3:
+          Control: GroupContainer@1.5.0
+          Variant: AutoLayout
+          Properties:
+            Fill: =RGBA(245, 245, 245, 1)
+            Height: =Parent.Height
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutGap: =16
+            PaddingBottom: =16
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            Width: =Parent.Width
+          Children:
+            - HeaderContainer2:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(255, 255, 255, 1)
+                  FillPortions: =0
+                  Height: =75
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                  Width: =Parent.Width
+                Children:
+                  - Header2:
+                      Control: Header@0.0.44
+                      Properties:
+                        Logo: =images
+                        Title: ="My Requests"
+            - MainContainer2:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  DropShadow: =DropShadow.None
+                  Fill: =Parent.Fill
+                  Height: =Parent.Height - 50
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutWrap: =true
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                  Width: =1000
+                Children:
+                  - Gallery3:
+                      Control: Gallery@2.15.0
+                      Variant: Vertical
+                      Properties:
+                        AccessibleLabel: ="Items gallery"
+                        BorderColor: =RGBA(245, 245, 245, 1)
+                        Height: =Parent.Height
+                        Items: =Filter(TimeOffRequests, Title = User().FullName)
+                        TabIndex: =0
+                        TemplateSize: =300
+                        Transition: =Transition.Pop
+                        WrapCount: =If(scrnMyRequests.Size = ScreenSize.ExtraLarge , 3, scrnMyRequests.Size = ScreenSize.Large, 2, 1)
+                      Children:
+                        - GalleryContainer2:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Fill: =RGBA(255, 255, 255, 1)
+                              Height: =Parent.Height/2 - 30
+                              LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutJustifyContent: =LayoutJustifyContent.Center
+                              LayoutOverflowY: =LayoutOverflow.Scroll
+                              Width: =If(scrnMyRequests.Size = ScreenSize.ExtraLarge, (Parent.Width / 3) - 15, scrnMyRequests.Size = ScreenSize.Large, (Parent.Width / 2) - 15 , Parent.Width)
+                              X: =5
+                              Y: =5
+                            Children:
+                              - TitleContainer2:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Center
+                                    DropShadow: =DropShadow.None
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutGap: =8
+                                    LayoutMinWidth: =GalleryContainer2.Width
+                                    PaddingBottom: =20
+                                    PaddingLeft: =20
+                                    PaddingRight: =20
+                                    PaddingTop: =20
+                                    RadiusBottomLeft: =0
+                                    RadiusBottomRight: =0
+                                    RadiusTopLeft: =0
+                                    RadiusTopRight: =0
+                                    Width: =Parent.Width
+                                  Children:
+                                    - Label8:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0, 0, 0, 0)
+                                          BorderStyle: =BorderStyle.None
+                                          BorderThickness: =2
+                                          Color: =RGBA(50, 49, 48, 1)
+                                          DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                                          DisabledColor: =RGBA(161, 159, 157, 1)
+                                          FocusedBorderThickness: =4
+                                          Font: =Font.'Segoe UI'
+                                          Text: =ThisItem.'Leave Type'.Value
+                                    - Label9:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0, 0, 0, 0)
+                                          BorderStyle: =BorderStyle.None
+                                          BorderThickness: =2
+                                          Color: |-
+                                            =Switch(
+                                                ThisItem.Status.Value,
+                                                "Pending", Color.Orange,
+                                                "Approved", Color.Green,
+                                                "Denied", Color.Red,
+                                                Color.Black
+                                            )
+                                          DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                                          DisabledColor: =RGBA(161, 159, 157, 1)
+                                          FocusedBorderThickness: =4
+                                          Font: =Font.'Segoe UI'
+                                          Text: =ThisItem.Status.Value
+                                    - Label10:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0, 0, 0, 0)
+                                          BorderStyle: =BorderStyle.None
+                                          BorderThickness: =2
+                                          Color: =RGBA(50, 49, 48, 1)
+                                          DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                                          DisabledColor: =RGBA(161, 159, 157, 1)
+                                          FocusedBorderThickness: =4
+                                          Font: =Font.'Segoe UI'
+                                          Text: ="From " & Text(ThisItem.'Start Date', "mmm dd") & " to " & Text(ThisItem.'End Date', "mmm dd, yyyy")
+                                          Width: =200
+                              - ButtonContainer2:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.SetByContainer
+                                    DropShadow: =DropShadow.None
+                                    FillPortions: =0
+                                    Height: =50
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    PaddingBottom: =12
+                                    PaddingLeft: =20
+                                    PaddingRight: =20
+                                    PaddingTop: =8
+                                    RadiusBottomLeft: =0
+                                    RadiusBottomRight: =0
+                                    RadiusTopLeft: =0
+                                    RadiusTopRight: =0
+                                    Width: =Parent.Width
+                                  Children:
+                                    - deleteRequest:
+                                        Control: Button@0.0.45
+                                        Properties:
+                                          AccessibleLabel: ="Featured item button"
+                                          Appearance: ='ButtonCanvas.Appearance'.Secondary
+                                          OnSelect: |-
+                                            =Set(showDeletePopup, true);
+                                            Set(selectedItemToDelete, ThisItem)
+                                          Text: ="Delete Request"
+                                          Visible: =If(ThisItem.'Status'.Value <> "Approved" && ThisItem.'Status'.Value <> "Denied", true, false)
+                                          Width: =150
+      - Rectangle4:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderStyle: =BorderStyle.None
+            BorderThickness: =2
+            DisabledFill: =RGBA(161, 159, 157, 1)
+            Fill: =RGBA(128, 128, 128, 0.8)
+            FocusedBorderThickness: =4
+            Height: =292
+            HoverFill: =RGBA(0, 120, 212, 1)
+            PressedFill: =RGBA(0, 120, 212, 0.4)
+            Visible: =showDeletePopup
+            Width: =508
+            X: =429
+            Y: =238
+      - bttnDelete:
+          Control: Button@0.0.45
+          Properties:
+            BasePaletteColor: =RGBA(156, 220, 79, 1)
+            OnSelect: |-
+              =Remove(TimeOffRequests, selectedItemToDelete);
+              Set(showDeletePopup, false);
+              Notify("Request deleted successfully.", NotificationType.Success)
+            Text: ="Delete"
+            Visible: =showDeletePopup
+            X: =539
+            Y: =453
+      - bttnCancel:
+          Control: Button@0.0.45
+          Properties:
+            BasePaletteColor: =RGBA(249, 83, 109, 1)
+            OnSelect: =Set(showDeletePopup, false)
+            Text: ="Cancel"
+            Visible: =showDeletePopup
+            X: =731
+            Y: =453
+      - deletemessage:
+          Control: Text@0.0.51
+          Properties:
+            Align: ="Center"
+            Height: =95
+            Size: =30
+            Text: ="Are you sure you want to delete this request?"
+            Visible: =showDeletePopup
+            Weight: ='TextCanvas.Weight'.Semibold
+            Width: =354
+            X: =506
+            Y: =294
+      - Container4_1:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =40
+            Width: =Parent.Width
+            Y: =Parent.Height - 40
+          Children:
+            - Calendar_1:
+                Control: Button@0.0.45
+                Properties:
+                  Height: =Parent.Height
+                  OnSelect: =Navigate(scrnCalendar, ScreenTransition.None)
+                  Text: ="Calendar"
+                  Width: =Parent.Width/3
+            - MyRequests_1:
+                Control: Button@0.0.45
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderRadius: =2
+                  BorderStyle: =BorderStyle.Solid
+                  Height: =Parent.Height
+                  IconStyle: ='ButtonCanvas.IconStyle'.Outline
+                  OnSelect: =Navigate(scrnMyRequests, ScreenTransition.None)
+                  Text: ="My Requests"
+                  Width: =Parent.Width/3
+                  X: =Parent.Width - Parent.Width/3
+            - Request_1:
+                Control: Button@0.0.45
+                Properties:
+                  Height: =Parent.Height
+                  OnSelect: =Navigate(Screen1, ScreenTransition.None)
+                  Text: ="Request"
+                  Width: =Parent.Width/3
+                  X: =Parent.Width/3
+      - NavigateToManagerScreen_1:
+          Control: Button@0.0.45
+          Properties:
+            Height: =39
+            OnSelect: =Navigate(scrnManagerView, ScreenTransition.None)
+            Text: ="Manager Dashboard"
+            Visible: =User().Email = "IGREWAL1@calgary.ca"
+            Width: =201
+            X: =1060
+            Y: =36
