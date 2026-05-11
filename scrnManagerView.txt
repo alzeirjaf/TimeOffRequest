@@ -1,0 +1,289 @@
+Screens:
+  scrnManagerView:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+    Children:
+      - ScreenContainer2:
+          Control: GroupContainer@1.5.0
+          Variant: AutoLayout
+          Properties:
+            Fill: =RGBA(245, 245, 245, 1)
+            Height: =Parent.Height
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutGap: =16
+            PaddingBottom: =16
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            Width: =Parent.Width
+          Children:
+            - HeaderContainer1:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(255, 255, 255, 1)
+                  FillPortions: =0
+                  Height: =75
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - Header2_2:
+                      Control: Header@0.0.44
+                      Properties:
+                        Logo: =images
+                        Title: ="Manager Time-Off Dashboard"
+            - filterContainer:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Fill: =RGBA(255, 255, 255, 1)
+                  FillPortions: =0
+                  Height: =75
+                  X: =40
+                  Y: =40
+                Children:
+                  - Dropdown_EmployeeName:
+                      Control: DropDown@0.0.45
+                      Properties:
+                        AccessibleLabel: =
+                        Items: =Distinct(TimeOffRequests, Title)
+                        X: =854
+                        Y: =20
+                  - Dropdown_LeaveType:
+                      Control: DropDown@0.0.45
+                      Properties:
+                        Items: =Distinct(TimeOffRequests, 'Leave Type')
+                        X: =393
+                        Y: =20
+                  - Dropdown_Status:
+                      Control: DropDown@0.0.45
+                      Properties:
+                        Items: =Distinct(TimeOffRequests, Status)
+                        X: =44
+                        Y: =20
+            - MainContainer1:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(255, 255, 255, 1)
+                  LayoutDirection: =LayoutDirection.Vertical
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                  Width: =250
+                Children:
+                  - Gallery Container:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        AlignInContainer: =
+                        FillPortions: =0
+                        Height: =Parent.Height
+                        Width: =Parent.Width
+                        X: =500
+                        Y: =4
+                      Children:
+                        - galManagerRequests:
+                            Control: Gallery@2.15.0
+                            Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              Height: =496
+                              Items: |-
+                                =Filter(
+                                    TimeOffRequests,
+                                    (IsBlank(Dropdown_EmployeeName.Selected.Value) || Title = Dropdown_EmployeeName.Selected.Value) &&
+                                    (IsBlank(Dropdown_LeaveType.Selected.Value.Value) || 'Leave Type'.Value = Dropdown_LeaveType.Selected.Value.Value) && 
+                                    (IsBlank(Dropdown_Status.Selected.Value.Value) ||
+                                    Status.Value = 
+                                    Dropdown_Status.Selected.Value.Value)
+                                )
+                              Width: =Parent.Width
+                              Y: =1
+                            Children:
+                              - employeeName:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 1)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =2
+                                    Color: =RGBA(50, 49, 48, 1)
+                                    DisabledColor: =RGBA(161, 159, 157, 1)
+                                    FocusedBorderThickness: =4
+                                    Font: =Font.'Segoe UI'
+                                    FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                                    Height: =32
+                                    OnSelect: =Select(Parent)
+                                    PaddingBottom: =0
+                                    PaddingLeft: =12
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =20
+                                    Text: =ThisItem.Title
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =223
+                                    X: =100
+                              - Separator2:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    FocusedBorderThickness: =4
+                                    Height: =8
+                                    OnSelect: =Select(Parent)
+                                    Width: =Parent.TemplateWidth
+                                    Y: =Parent.TemplateHeight - Self.Height
+                              - Rectangle3:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    Fill: =RGBA(0, 120, 212, 1)
+                                    FocusedBorderThickness: =4
+                                    Height: =Parent.TemplateHeight - Separator2.Height
+                                    OnSelect: =Select(Parent)
+                                    Visible: =ThisItem.IsSelected
+                                    Width: =4
+                              - leavetype:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Align: =Align.Left
+                                    Size: =18
+                                    Text: =ThisItem.'Leave Type'.Value
+                                    X: =100
+                                    Y: =32
+                              - dates:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Size: =18
+                                    Text: ="From " & Text(ThisItem.'Start Date', "mmm dd") & " to " & Text(ThisItem.'End Date', "mmm dd, yyyy")
+                                    Width: =284
+                                    X: =100
+                                    Y: =64
+                              - statusLabel:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    BorderThickness: =2
+                                    Color: |-
+                                      =Switch(
+                                          ThisItem.Status.Value,
+                                          "Pending", Color.Orange,
+                                          "Approved", Color.Green,
+                                          "Denied", Color.Red,
+                                          Color.Black
+                                      )
+                                    DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                                    DisabledColor: =RGBA(161, 159, 157, 1)
+                                    FocusedBorderThickness: =4
+                                    Font: =Font.'Segoe UI'
+                                    OnSelect: =Select(Parent)
+                                    Text: =ThisItem.Status.Value
+                                    X: =4
+                              - reason:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =88
+                                    Text: =ThisItem.Reason
+                                    Width: =573
+                                    X: =406
+                                    Y: =8
+                              - btnDeny:
+                                  Control: Button@0.0.45
+                                  Properties:
+                                    OnSelect: |-
+                                      =Patch(
+                                          TimeOffRequests,
+                                          ThisItem,
+                                          {
+                                              Status: {Value: "Denied"},
+                                              'Denied Date': Now()
+                                          }
+                                      );
+
+                                      Office365Outlook.SendEmailV2(
+                                          ThisItem.Email,
+                                          "Your Time Off Request Has Been Denied",
+                                          "Hello " & ThisItem.Title & "," & Char(10) & Char(10) & 
+                                          "We regret to inform you that your time off request from " & 
+                                          Text(ThisItem.'Start Date', "[$-en-US]mmm dd, yyyy") & " to " & 
+                                          Text(ThisItem.'End Date', "[$-en-US]mmm dd, yyyy") & 
+                                          " has been denied." & Char(10) & Char(10) & 
+                                          "Please contact your manager if you have any questions."
+                                      );
+
+                                      Notify("Request denied and email sent to " & ThisItem.Title, NotificationType.Success);
+                                    Text: ="Deny"
+                                    Visible: =ThisItem.Status.Value = "Pending"
+                                    X: =1221
+                                    Y: =52
+                              - btnApprove:
+                                  Control: Button@0.0.45
+                                  Properties:
+                                    OnSelect: |-
+                                      =Patch(
+                                          TimeOffRequests,
+                                          ThisItem,
+                                          {
+                                              Status: {Value: "Approved"},
+                                              'Approved Date': Now()
+                                          }
+                                      );
+
+                                      Office365Outlook.SendEmailV2(
+                                          ThisItem.Email,
+                                          "Your Time Off Request Has Been Approved",
+                                          "Hello " & ThisItem.Title & "," & Char(10) & Char(10) & 
+                                          "Your time off request from " & 
+                                          Text(ThisItem.'Start Date', "[$-en-US]mmm dd, yyyy") & " to " & 
+                                          Text(ThisItem.'End Date', "[$-en-US]mmm dd, yyyy") & 
+                                          " has been approved." & Char(10) & Char(10) & 
+                                          "Thank you."
+                                      );
+
+                                      Notify("Request approved and email sent to " & ThisItem.Title, NotificationType.Success);
+                                    Text: ="Approve"
+                                    Visible: =ThisItem.Status.Value = "Pending"
+                                    X: =1221
+                                    Y: =8
+      - Container4_3:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =40
+            Width: =Parent.Width
+            Y: =Parent.Height - 40
+          Children:
+            - Calendar_3:
+                Control: Button@0.0.45
+                Properties:
+                  Height: =Parent.Height
+                  OnSelect: =Navigate(scrnCalendar, ScreenTransition.None)
+                  Text: ="Calendar"
+                  Width: =Parent.Width/3
+            - MyRequests_3:
+                Control: Button@0.0.45
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  BorderRadius: =2
+                  BorderStyle: =BorderStyle.Solid
+                  Height: =Parent.Height
+                  IconStyle: ='ButtonCanvas.IconStyle'.Outline
+                  OnSelect: =Navigate(scrnMyRequests, ScreenTransition.None)
+                  Text: ="My Requests"
+                  Width: =Parent.Width/3
+                  X: =Parent.Width - Parent.Width/3
+            - Request_3:
+                Control: Button@0.0.45
+                Properties:
+                  Height: =Parent.Height
+                  OnSelect: =Navigate(Screen1, ScreenTransition.None)
+                  Text: ="Request"
+                  Width: =Parent.Width/3
+                  X: =Parent.Width/3
