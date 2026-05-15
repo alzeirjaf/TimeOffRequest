@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Time Off Request Revamp</title>
+  <style>
+    :root {
+      --bg: #eef7ff;
+      --panel: rgba(255, 255, 255, 0.76);
+      --glass: rgba(255, 255, 255, 0.52);
+      --glass-strong: rgba(255, 255, 255, 0.82);
+      --primary: #2f7de1;
+      --primary-dark: #185db7;
+      --text: #1f2937;
+      --muted: #607089;
+      --border: rgba(176, 203, 231, 0.72);
+      --green: #16a34a;
+      --amber: #d97706;
+      --red: #dc2626;
+      --chip-blue: rgba(219, 234, 254, 0.86);
+      --shadow: 0 18px 50px rgba(43, 103, 178, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Aptos, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(135deg, #f8fcff 0%, #eef7ff 42%, #e7f1ff 100%);
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: rgba(255, 255, 255, 0.66);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(145deg, #d71920, #b9111b);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(215, 25, 32, 0.22);
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      padding: 6px;
+      background: rgba(255, 255, 255, 0.52);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    nav button {
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 10px 15px;
+      color: #45617f;
+      background: rgba(255, 255, 255, 0.34);
+      font-weight: 650;
+      cursor: default;
+    }
+
+    nav button.active {
+      color: #0d3f82;
+      background: rgba(255, 255, 255, 0.88);
+      border-color: rgba(154, 196, 239, 0.78);
+      box-shadow: 0 10px 28px rgba(47, 125, 225, 0.18);
+    }
+
+    main {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 24px auto 40px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(320px, 0.9fr);
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 22px 24px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1, h2 {
+      margin: 0;
+      font-size: 23px;
+      line-height: 1.25;
+      font-weight: 750;
+    }
+
+    .subtle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    form {
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 12px 13px;
+      font: inherit;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(47, 125, 225, 0.7);
+      box-shadow: 0 0 0 4px rgba(47, 125, 225, 0.12);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 112px;
+      resize: vertical;
+    }
+
+    .time-row {
+      display: grid;
+      grid-template-columns: 1fr 112px;
+      gap: 10px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 4px;
+    }
+
+    .secondary {
+      border: 1px solid var(--border);
+      color: #31506f;
+      background: rgba(255, 255, 255, 0.52);
+      backdrop-filter: blur(12px);
+    }
+
+    .primary {
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      color: #073d82;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(197, 224, 255, 0.78));
+      box-shadow: 0 12px 28px rgba(47, 125, 225, 0.24);
+      backdrop-filter: blur(14px);
+    }
+
+    .actions button {
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight: 700;
+      font: inherit;
+    }
+
+    .summary {
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .summary-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      background: var(--glass);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      font-size: 14px;
+    }
+
+    .metric span:first-child {
+      color: var(--muted);
+    }
+
+    .metric strong {
+      text-align: right;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      background: var(--chip-blue);
+      border: 1px solid rgba(143, 185, 236, 0.58);
+    }
+
+    .manager {
+      grid-column: 1 / -1;
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .manager-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+    }
+
+    .filters select {
+      min-width: 170px;
+      padding: 9px 11px;
+    }
+
+    .request-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 0.75fr 1.4fr auto;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--glass-strong);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .request-row p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status {
+      color: #92400e;
+      background: rgba(254, 243, 199, 0.82);
+      border-color: rgba(245, 158, 11, 0.28);
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .approve, .deny {
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-weight: 700;
+      backdrop-filter: blur(12px);
+    }
+
+    .approve {
+      color: #0f5e2c;
+      background: rgba(220, 252, 231, 0.88);
+    }
+
+    .deny {
+      color: #991b1b;
+      background: rgba(254, 226, 226, 0.9);
+    }
+
+    @media (max-width: 860px) {
+      header {
+        height: auto;
+        padding: 16px;
+        align-items: flex-start;
+        gap: 14px;
+        flex-direction: column;
+      }
+
+      nav {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .row, .request-row {
+        grid-template-columns: 1fr;
+      }
+
+      .manager-top, .filters {
+        align-items: stretch;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">Calgary</div>
+        <span>Time Off Request</span>
+      </div>
+      <nav aria-label="Primary">
+        <button class="active">Request</button>
+        <button>My Requests</button>
+        <button>Calendar</button>
+        <button>Manager</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="panel">
+        <div class="panel-header">
+          <h1>New Time Off Request</h1>
+          <div class="subtle">Choose your dates, leave type, and add any context your manager should know.</div>
+        </div>
+        <form>
+          <div class="row">
+            <label>
+              Start
+              <div class="time-row">
+                <input type="date" value="2026-05-20">
+                <input type="time" value="09:00">
+              </div>
+            </label>
+            <label>
+              End
+              <div class="time-row">
+                <input type="date" value="2026-05-24">
+                <input type="time" value="17:00">
+              </div>
+            </label>
+          </div>
+          <label>
+            Leave type
+            <select>
+              <option>Vacation</option>
+              <option>Sick leave</option>
+              <option>Personal leave</option>
+            </select>
+          </label>
+          <label>
+            Reason
+            <textarea>Family trip booked for the long weekend.</textarea>
+          </label>
+          <div class="actions">
+            <button class="secondary" type="button">Clear</button>
+            <button class="primary" type="button">Submit request</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="panel summary">
+        <div>
+          <h2>Request Summary</h2>
+          <div class="subtle">This is what your manager will receive.</div>
+        </div>
+        <div class="summary-card">
+          <span class="chip">Pending manager review</span>
+          <div class="metric"><span>Employee</span><strong>Ira Akbar</strong></div>
+          <div class="metric"><span>Leave type</span><strong>Vacation</strong></div>
+          <div class="metric"><span>Start</span><strong>May 20, 2026, 9:00 AM</strong></div>
+          <div class="metric"><span>End</span><strong>May 24, 2026, 5:00 PM</strong></div>
+          <div class="metric"><span>Duration</span><strong>5 calendar days / 104 hours</strong></div>
+        </div>
+      </aside>
+
+      <section class="panel manager">
+        <div class="manager-top">
+          <div>
+            <h2>Manager Dashboard</h2>
+            <div class="subtle">Requests show duration up front so review is faster.</div>
+          </div>
+          <div class="filters">
+            <select><option>Pending</option></select>
+            <select><option>All leave types</option></select>
+            <select><option>All employees</option></select>
+          </div>
+        </div>
+        <div class="request-row">
+          <div><strong>Sam Patel</strong><p>Vacation</p></div>
+          <div><strong>Jun 10, 1:00 PM to Jun 10, 5:00 PM</strong><p>4 hours</p></div>
+          <span class="chip status">Pending</span>
+          <p>Out of province for a family event.</p>
+          <div class="row-actions">
+            <button class="approve">Approve</button>
+            <button class="deny">Deny</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
